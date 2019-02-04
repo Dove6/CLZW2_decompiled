@@ -1,0 +1,378 @@
+.text:10034CA1 ; ---------------------------------------------------------------------------
+.text:10034CA4                 align 10h
+.text:10034CB0 ; Exported entry 2202. ?decompress@CLZWCompression2@@QAEPADXZ
+.text:10034CB0
+.text:10034CB0 ; =============== S U B R O U T I N E =======================================
+.text:10034CB0
+.text:10034CB0
+.text:10034CB0 ; char *__thiscall CLZWCompression2::decompress(CLZWCompression2 *__hidden this)
+.text:10034CB0                 public ?decompress@CLZWCompression2@@QAEPADXZ
+.text:10034CB0 ?decompress@CLZWCompression2@@QAEPADXZ proc near
+.text:10034CB0                                         ; CODE XREF: CGraphicsObject::DeCompress(void)+CF↑p
+.text:10034CB0                                         ; CGraphicsObject::DeCompress(void)+167↑p ...
+.text:10034CB0
+.text:10034CB0 var_4           = dword ptr -4
+.text:10034CB0											; wyrzuca potrzebne rejestry:
+.text:10034CB0                 push    ecx				; <-counter
+.text:10034CB1                 push    ebx				; <-base
+.text:10034CB2                 push    esi				; <-source index
+.text:10034CB3                 mov     esi, ecx			; this
+.text:10034CB5                 push    edi				; <-destination index
+.text:10034CB6                 mov     eax, [esi+14h]	; eax <- piąte pole
+.text:10034CB9                 mov     ecx, [eax]		; dereferencja piątego pola (pierwszy bajt kodu)
+.text:10034CBB                 mov     [esp+10h+var_4], ecx ; stos +12 <- adres pierwszego bajtu kodu
+.text:10034CBF                 mov     ebx, [eax+4]		; ebx <- szóste pole
+.text:10034CC2                 push    ecx              ; unsigned int - pierwszy bajt kodu |
+.text:10034CC3                 call    ??2@YAPAXI@Z     ; operator new(uint)			  <- (alokacja)
+.text:10034CC8                 mov     ecx, [esi+14h]	; ecx <- piąte pole
+.text:10034CCB                 mov     edi, eax			; edi <- wskaźnik na zaalokowaną pamięć
+.text:10034CCD                 lea     eax, [esp+14h+var_4] ; eax <- adres pierwszego bajtu kodu
+.text:10034CD1                 push    0				; argument - miejsce na zwrot czegoś???
+.text:10034CD3                 push    eax				; argument - pierwszy znak kodu
+.text:10034CD4                 push    edi				; argument - pierwsze miejsce na dekod
+.text:10034CD5                 add     ecx, 8			; następne następne pole ?
+.text:10034CD8                 push    ebx				; argument - szóste pole
+.text:10034CD9                 push    ecx				; argument - siódme pole
+.text:10034CDA                 call    sub_100EAAA0
+.text:10034CDF                 add     esp, 18h			; zwolnienie stosu po wszystkich pushach niewyrzucanych
+.text:10034CE2                 mov     eax, edi			; eax <- wskaźnik na zaalokowaną pamięć
+.text:10034CE4                 pop     edi				; ->przywrócenie edi
+.text:10034CE5                 pop     esi				; ->przywrócenie esi
+.text:10034CE6                 pop     ebx				; ->przywrócenie ebx
+.text:10034CE7                 pop     ecx				; ->przywrócenie exc
+.text:10034CE8                 retn
+.text:10034CE8 ?decompress@CLZWCompression2@@QAEPADXZ endp
+.text:10034CE8
+.text:100EAA90 ; ---------------------------------------------------------------------------
+.text:100EAA91                 align 10h
+.text:100EAAA0
+.text:100EAAA0 ; =============== S U B R O U T I N E =======================================
+.text:100EAAA0
+.text:100EAAA0
+.text:100EAAA0 sub_100EAAA0    proc near               ; CODE XREF: CLZWCompression2::decompress(void)+2A↑p
+.text:100EAAA0
+.text:100EAAA0 arg_0           = dword ptr  4			; siódme pole
+.text:100EAAA0 arg_4           = dword ptr  8			; szóste pole
+.text:100EAAA0 arg_8           = dword ptr  0Ch			; pierwsze miejsce dekod
+.text:100EAAA0 arg_C           = dword ptr  10h			; pierwszy znak kodu
+.text:100EAAA0
+.text:100EAAA0                 mov     eax, [esp+arg_4]
+.text:100EAAA4                 push    ebx					; <-/ ebx
+.text:100EAAA5                 mov     ebx, [esp+4+arg_C]
+.text:100EAAA9                 push    ebp					; <-/ ebp
+.text:100EAAAA                 push    esi					; <-/ esi
+.text:100EAAAB                 mov     esi, [esp+0Ch+arg_0]
+.text:100EAAAF                 mov     dword ptr [ebx], 0
+.text:100EAAB5                 push    edi					; <-/ edi
+.text:100EAAB6                 mov     cl, [esi]
+.text:100EAAB8                 lea     ebp, [esi+eax]
+.text:100EAABB                 mov     eax, [esp+10h+arg_8]
+.text:100EAABF                 cmp     cl, 11h
+.text:100EAAC2                 jbe     short loc_100EAAE2
+.text:100EAAC4                 and     ecx, 0FFh
+.text:100EAACA                 sub     ecx, 11h
+.text:100EAACD                 inc     esi
+.text:100EAACE                 cmp     ecx, 4
+.text:100EAAD1                 jb      loc_100EAB8E
+.text:100EAAD7
+.text:100EAAD7 loc_100EAAD7:                           ; CODE XREF: sub_100EAAA0+3E↓j
+.text:100EAAD7                 mov     dl, [esi]
+.text:100EAAD9                 mov     [eax], dl
+.text:100EAADB                 inc     eax
+.text:100EAADC                 inc     esi
+.text:100EAADD                 dec     ecx
+.text:100EAADE                 jnz     short loc_100EAAD7
+.text:100EAAE0                 jmp     short loc_100EAB4C
+.text:100EAAE2 ; ---------------------------------------------------------------------------
+.text:100EAAE2
+.text:100EAAE2 loc_100EAAE2:                           ; CODE XREF: sub_100EAAA0+22↑j
+.text:100EAAE2                                         ; sub_100EAAA0+E8↓j
+.text:100EAAE2                 xor     ecx, ecx
+.text:100EAAE4                 mov     cl, [esi]
+.text:100EAAE6                 inc     esi
+.text:100EAAE7                 cmp     ecx, 10h
+.text:100EAAEA                 jnb     loc_100EAB9C
+.text:100EAAF0                 test    ecx, ecx
+.text:100EAAF2                 jnz     short loc_100EAB10
+.text:100EAAF4                 cmp     byte ptr [esi], 0
+.text:100EAAF7                 jnz     short loc_100EAB07
+.text:100EAAF9
+.text:100EAAF9 loc_100EAAF9:                           ; CODE XREF: sub_100EAAA0+65↓j
+.text:100EAAF9                 mov     dl, [esi+1]
+.text:100EAAFC                 add     ecx, 0FFh
+.text:100EAB02                 inc     esi
+.text:100EAB03                 test    dl, dl
+.text:100EAB05                 jz      short loc_100EAAF9
+.text:100EAB07
+.text:100EAB07 loc_100EAB07:                           ; CODE XREF: sub_100EAAA0+57↑j
+.text:100EAB07                 xor     edx, edx
+.text:100EAB09                 mov     dl, [esi]
+.text:100EAB0B                 inc     esi
+.text:100EAB0C                 lea     ecx, [ecx+edx+0Fh]
+.text:100EAB10
+.text:100EAB10 loc_100EAB10:                           ; CODE XREF: sub_100EAAA0+52↑j
+.text:100EAB10                 mov     edx, [esi]
+.text:100EAB12                 add     esi, 4
+.text:100EAB15                 mov     [eax], edx
+.text:100EAB17                 add     eax, 4
+.text:100EAB1A                 dec     ecx
+.text:100EAB1B                 jz      short loc_100EAB4C
+.text:100EAB1D                 cmp     ecx, 4
+.text:100EAB20                 jb      short loc_100EAB43
+.text:100EAB22
+.text:100EAB22 loc_100EAB22:                           ; CODE XREF: sub_100EAAA0+92↓j
+.text:100EAB22                 mov     edx, [esi]
+.text:100EAB24                 sub     ecx, 4
+.text:100EAB27                 mov     [eax], edx
+.text:100EAB29                 add     eax, 4
+.text:100EAB2C                 add     esi, 4
+.text:100EAB2F                 cmp     ecx, 4
+.text:100EAB32                 jnb     short loc_100EAB22
+.text:100EAB34                 test    ecx, ecx
+.text:100EAB36                 jbe     short loc_100EAB4C
+.text:100EAB38
+.text:100EAB38 loc_100EAB38:                           ; CODE XREF: sub_100EAAA0+9F↓j
+.text:100EAB38                 mov     dl, [esi]
+.text:100EAB3A                 mov     [eax], dl
+.text:100EAB3C                 inc     eax
+.text:100EAB3D                 inc     esi
+.text:100EAB3E                 dec     ecx
+.text:100EAB3F                 jnz     short loc_100EAB38
+.text:100EAB41                 jmp     short loc_100EAB4C
+.text:100EAB43 ; ---------------------------------------------------------------------------
+.text:100EAB43
+.text:100EAB43 loc_100EAB43:                           ; CODE XREF: sub_100EAAA0+80↑j
+.text:100EAB43                                         ; sub_100EAAA0+AA↓j
+.text:100EAB43                 mov     dl, [esi]
+.text:100EAB45                 mov     [eax], dl
+.text:100EAB47                 inc     eax
+.text:100EAB48                 inc     esi
+.text:100EAB49                 dec     ecx
+.text:100EAB4A                 jnz     short loc_100EAB43
+.text:100EAB4C
+.text:100EAB4C loc_100EAB4C:                           ; CODE XREF: sub_100EAAA0+40↑j
+.text:100EAB4C                                         ; sub_100EAAA0+7B↑j ...
+.text:100EAB4C                 xor     ecx, ecx
+.text:100EAB4E                 mov     cl, [esi]
+.text:100EAB50                 inc     esi
+.text:100EAB51                 cmp     ecx, 10h
+.text:100EAB54                 jnb     short loc_100EAB9C
+.text:100EAB56                 shr     ecx, 2
+.text:100EAB59                 mov     edx, eax
+.text:100EAB5B                 sub     edx, ecx
+.text:100EAB5D                 xor     ecx, ecx
+.text:100EAB5F                 mov     cl, [esi]
+.text:100EAB61                 shl     ecx, 2
+.text:100EAB64                 sub     edx, ecx
+.text:100EAB66                 mov     cl, [edx-801h]
+.text:100EAB6C                 sub     edx, 801h
+.text:100EAB72                 inc     esi
+.text:100EAB73                 mov     [eax], cl
+.text:100EAB75                 inc     eax
+.text:100EAB76                 inc     edx
+.text:100EAB77
+.text:100EAB77 loc_100EAB77:                           ; CODE XREF: sub_100EAAA0+216↓j
+.text:100EAB77                 mov     cl, [edx]
+.text:100EAB79                 mov     [eax], cl
+.text:100EAB7B                 mov     dl, [edx+1]
+.text:100EAB7E                 inc     eax
+.text:100EAB7F                 mov     [eax], dl
+.text:100EAB81                 inc     eax
+.text:100EAB82
+.text:100EAB82 loc_100EAB82:                           ; CODE XREF: sub_100EAAA0+132↓j
+.text:100EAB82                                         ; sub_100EAAA0+1F0↓j ...
+.text:100EAB82                 mov     cl, [esi-2]
+.text:100EAB85                 and     ecx, 3
+.text:100EAB88                 jz      loc_100EAAE2
+.text:100EAB8E
+.text:100EAB8E loc_100EAB8E:                           ; CODE XREF: sub_100EAAA0+31↑j
+.text:100EAB8E                                         ; sub_100EAAA0+F5↓j
+.text:100EAB8E                 mov     dl, [esi]
+.text:100EAB90                 mov     [eax], dl
+.text:100EAB92                 inc     eax
+.text:100EAB93                 inc     esi
+.text:100EAB94                 dec     ecx
+.text:100EAB95                 jnz     short loc_100EAB8E
+.text:100EAB97                 xor     ecx, ecx
+.text:100EAB99                 mov     cl, [esi]
+.text:100EAB9B                 inc     esi
+.text:100EAB9C
+.text:100EAB9C loc_100EAB9C:                           ; CODE XREF: sub_100EAAA0+4A↑j
+.text:100EAB9C                                         ; sub_100EAAA0+B4↑j
+.text:100EAB9C                 cmp     ecx, 40h
+.text:100EAB9F                 jb      short loc_100EABD4
+.text:100EABA1                 mov     edx, ecx
+.text:100EABA3                 mov     edi, eax
+.text:100EABA5                 shr     edx, 2
+.text:100EABA8                 and     edx, 7
+.text:100EABAB                 sub     edi, edx
+.text:100EABAD                 xor     edx, edx
+.text:100EABAF                 mov     dl, [esi]
+.text:100EABB1                 shl     edx, 3
+.text:100EABB4                 sub     edi, edx
+.text:100EABB6                 dec     edi
+.text:100EABB7                 inc     esi
+.text:100EABB8                 shr     ecx, 5
+.text:100EABBB                 dec     ecx
+.text:100EABBC
+.text:100EABBC loc_100EABBC:                           ; CODE XREF: sub_100EAAA0+1BC↓j
+.text:100EABBC                                         ; sub_100EAAA0+1C9↓j
+.text:100EABBC                 mov     dl, [edi]
+.text:100EABBE                 mov     [eax], dl
+.text:100EABC0                 mov     dl, [edi+1]
+.text:100EABC3                 inc     eax
+.text:100EABC4                 inc     edi
+.text:100EABC5                 mov     [eax], dl
+.text:100EABC7                 inc     eax
+.text:100EABC8                 inc     edi
+.text:100EABC9
+.text:100EABC9 loc_100EABC9:                           ; CODE XREF: sub_100EAAA0+130↓j
+.text:100EABC9                 mov     dl, [edi]
+.text:100EABCB                 mov     [eax], dl
+.text:100EABCD                 inc     eax
+.text:100EABCE                 inc     edi
+.text:100EABCF                 dec     ecx
+.text:100EABD0                 jnz     short loc_100EABC9
+.text:100EABD2                 jmp     short loc_100EAB82
+.text:100EABD4 ; ---------------------------------------------------------------------------
+.text:100EABD4
+.text:100EABD4 loc_100EABD4:                           ; CODE XREF: sub_100EAAA0+FF↑j
+.text:100EABD4                 cmp     ecx, 20h
+.text:100EABD7                 jb      short loc_100EAC0C
+.text:100EABD9                 and     ecx, 1Fh
+.text:100EABDC                 jnz     short loc_100EABFA
+.text:100EABDE                 cmp     byte ptr [esi], 0
+.text:100EABE1                 jnz     short loc_100EABF1
+.text:100EABE3
+.text:100EABE3 loc_100EABE3:                           ; CODE XREF: sub_100EAAA0+14F↓j
+.text:100EABE3                 mov     dl, [esi+1]
+.text:100EABE6                 add     ecx, 0FFh
+.text:100EABEC                 inc     esi
+.text:100EABED                 test    dl, dl
+.text:100EABEF                 jz      short loc_100EABE3
+.text:100EABF1
+.text:100EABF1 loc_100EABF1:                           ; CODE XREF: sub_100EAAA0+141↑j
+.text:100EABF1                 xor     edx, edx
+.text:100EABF3                 mov     dl, [esi]
+.text:100EABF5                 inc     esi
+.text:100EABF6                 lea     ecx, [ecx+edx+1Fh]
+.text:100EABFA
+.text:100EABFA loc_100EABFA:                           ; CODE XREF: sub_100EAAA0+13C↑j
+.text:100EABFA                 xor     edx, edx
+.text:100EABFC                 mov     edi, eax
+.text:100EABFE                 mov     dx, [esi]
+.text:100EAC01                 shr     edx, 2
+.text:100EAC04                 sub     edi, edx
+.text:100EAC06                 dec     edi
+.text:100EAC07                 add     esi, 2
+.text:100EAC0A                 jmp     short loc_100EAC59
+.text:100EAC0C ; ---------------------------------------------------------------------------
+.text:100EAC0C
+.text:100EAC0C loc_100EAC0C:                           ; CODE XREF: sub_100EAAA0+137↑j
+.text:100EAC0C                 cmp     ecx, 10h
+.text:100EAC0F                 jb      loc_100EACA4
+.text:100EAC15                 mov     edx, ecx
+.text:100EAC17                 mov     edi, eax
+.text:100EAC19                 and     edx, 8
+.text:100EAC1C                 shl     edx, 0Bh
+.text:100EAC1F                 sub     edi, edx
+.text:100EAC21                 and     ecx, 7
+.text:100EAC24                 jnz     short loc_100EAC42
+.text:100EAC26                 cmp     byte ptr [esi], 0
+.text:100EAC29                 jnz     short loc_100EAC39
+.text:100EAC2B
+.text:100EAC2B loc_100EAC2B:                           ; CODE XREF: sub_100EAAA0+197↓j
+.text:100EAC2B                 mov     dl, [esi+1]
+.text:100EAC2E                 add     ecx, 0FFh
+.text:100EAC34                 inc     esi
+.text:100EAC35                 test    dl, dl
+.text:100EAC37                 jz      short loc_100EAC2B
+.text:100EAC39
+.text:100EAC39 loc_100EAC39:                           ; CODE XREF: sub_100EAAA0+189↑j
+.text:100EAC39                 xor     edx, edx
+.text:100EAC3B                 mov     dl, [esi]
+.text:100EAC3D                 inc     esi
+.text:100EAC3E                 lea     ecx, [ecx+edx+7]
+.text:100EAC42
+.text:100EAC42 loc_100EAC42:                           ; CODE XREF: sub_100EAAA0+184↑j
+.text:100EAC42                 xor     edx, edx
+.text:100EAC44                 mov     dx, [esi]
+.text:100EAC47                 add     esi, 2
+.text:100EAC4A                 shr     edx, 2
+.text:100EAC4D                 sub     edi, edx
+.text:100EAC4F                 cmp     edi, eax
+.text:100EAC51                 jz      short loc_100EACBB
+.text:100EAC53                 sub     edi, 4000h
+.text:100EAC59
+.text:100EAC59 loc_100EAC59:                           ; CODE XREF: sub_100EAAA0+16A↑j
+.text:100EAC59                 cmp     ecx, 6
+.text:100EAC5C                 jb      loc_100EABBC
+.text:100EAC62                 mov     edx, eax
+.text:100EAC64                 sub     edx, edi
+.text:100EAC66                 cmp     edx, 4
+.text:100EAC69                 jl      loc_100EABBC
+.text:100EAC6F                 mov     edx, [edi]
+.text:100EAC71                 add     edi, 4
+.text:100EAC74                 mov     [eax], edx
+.text:100EAC76                 add     eax, 4
+.text:100EAC79                 sub     ecx, 2
+.text:100EAC7C
+.text:100EAC7C loc_100EAC7C:                           ; CODE XREF: sub_100EAAA0+1EC↓j
+.text:100EAC7C                 mov     edx, [edi]
+.text:100EAC7E                 sub     ecx, 4
+.text:100EAC81                 mov     [eax], edx
+.text:100EAC83                 add     eax, 4
+.text:100EAC86                 add     edi, 4
+.text:100EAC89                 cmp     ecx, 4
+.text:100EAC8C                 jnb     short loc_100EAC7C
+.text:100EAC8E                 test    ecx, ecx
+.text:100EAC90                 jbe     loc_100EAB82
+.text:100EAC96
+.text:100EAC96 loc_100EAC96:                           ; CODE XREF: sub_100EAAA0+1FD↓j
+.text:100EAC96                 mov     dl, [edi]
+.text:100EAC98                 mov     [eax], dl
+.text:100EAC9A                 inc     eax
+.text:100EAC9B                 inc     edi
+.text:100EAC9C                 dec     ecx
+.text:100EAC9D                 jnz     short loc_100EAC96
+.text:100EAC9F                 jmp     loc_100EAB82
+.text:100EACA4 ; ---------------------------------------------------------------------------
+.text:100EACA4
+.text:100EACA4 loc_100EACA4:                           ; CODE XREF: sub_100EAAA0+16F↑j
+.text:100EACA4                 shr     ecx, 2
+.text:100EACA7                 mov     edx, eax
+.text:100EACA9                 sub     edx, ecx
+.text:100EACAB                 xor     ecx, ecx
+.text:100EACAD                 mov     cl, [esi]
+.text:100EACAF                 shl     ecx, 2
+.text:100EACB2                 sub     edx, ecx
+.text:100EACB4                 dec     edx
+.text:100EACB5                 inc     esi
+.text:100EACB6                 jmp     loc_100EAB77
+.text:100EACBB ; ---------------------------------------------------------------------------
+.text:100EACBB
+.text:100EACBB loc_100EACBB:                           ; CODE XREF: sub_100EAAA0+1B1↑j
+.text:100EACBB                 mov     ecx, [esp+10h+arg_8]
+.text:100EACBF                 sub     eax, ecx
+.text:100EACC1                 cmp     esi, ebp
+.text:100EACC3                 mov     [ebx], eax
+.text:100EACC5                 jnz     short loc_100EACCE
+.text:100EACC7                 pop     edi					; /-> edi
+.text:100EACC8                 pop     esi					; /-> esi
+.text:100EACC9                 pop     ebp					; /-> ebp
+.text:100EACCA                 xor     eax, eax				; return 0
+.text:100EACCC                 pop     ebx					; /-> ebx
+.text:100EACCD                 retn
+.text:100EACCE ; ---------------------------------------------------------------------------
+.text:100EACCE
+.text:100EACCE loc_100EACCE:                           ; CODE XREF: sub_100EAAA0+225↑j
+.text:100EACCE                 sbb     eax, eax
+.text:100EACD0                 pop     edi					; /-> edi
+.text:100EACD1                 and     al, 0FCh
+.text:100EACD3                 pop     esi					; /-> esi
+.text:100EACD4                 pop     ebp					; /-> ebp
+.text:100EACD5                 add     eax, 0FFFFFFFCh
+.text:100EACD8                 pop     ebx					; /-> ebx
+.text:100EACD9                 retn
+.text:100EACD9 sub_100EAAA0    endp
+.text:100EACD9
