@@ -96,6 +96,12 @@ public:
                                 ;//loc_100EAB4C
                             } else if (i < 4) {
                                 ;//loc_100EAB43
+                                for (; i > 0; i--) {
+                                    current_byte = *compressed_ptr;
+                                    *decompressed_ptr = current_byte;
+                                    compressed_ptr++;
+                                    decompressed_ptr++;
+                                }
                             } else {
                                 for (; i >= 4; i -= 4) {
                                     current_dword = *reinterpret_cast<unsigned *>(compressed_ptr);
@@ -106,13 +112,87 @@ public:
                                 if (i == 0) {
                                     ;//loc_100EAB4C
                                 } else {
-                                    for (; i > 0; i--) {//jak loc_100EAB43
+                                    for (; i > 0; i--) {//loc_100EAB38, jak loc_100EAB43
                                         current_byte = *compressed_ptr;
                                         *decompressed_ptr = current_byte;
-                                        compressed_byte++;
-                                        decompressed_byte++;
+                                        compressed_ptr+;
+                                        decompressed_ptr++;
                                     }
                                     ;//loc_100EAB4C
+                                    current_byte = *compressed_ptr;
+                                    compressed_ptr++;
+                                    if (current_byte >= 16) {
+                                        ;//loc_100EAB9C
+                                    } else {
+                                        current_byte >> 2;
+                                        char *prior_decompressed_ptr = decompressed_ptr;
+                                        prior_decompressed_ptr -= current_byte;
+                                        current_word = *compressed_ptr;
+                                        current_word << 2;
+                                        prior_decompressed_ptr -= current_word;
+                                        prior_decompressed_ptr -= 2049;
+                                        current_byte = *prior_decompressed_ptr;
+                                        compressed_ptr++;
+                                        *decompressed_ptr = current_byte;
+                                        decompressed_ptr++;
+                                        prior_decompressed_ptr++;
+
+                                        current_byte = prior_decompressed_ptr[0];
+                                        *decompressed_ptr = current_byte;
+                                        decompressed_ptr++;
+                                        current_byte = prior_decompressed_ptr[1];
+                                        *decompressed_ptr = current_byte;
+                                        decompressed_ptr++;
+                                        ;//loc_100EAB82
+                                        current_byte = compressed_ptr[-2];
+                                        current_byte &= 3;
+                                        if (current_byte == 0) {
+                                            ;//loc_100EAAE2
+                                        } else {
+                                            for (unsigned i = current_byte; i > 0; i--) {
+                                                current_byte = *compressed_ptr;
+                                                *decompressed_ptr = current_byte;
+                                                decompressed_ptr++;
+                                                compressed_ptr++;
+                                            }
+                                            current_byte = *compressed_ptr;
+                                            compressed_ptr++;
+                                            ;//loc_100EAB9C
+                                            if (current_byte < 64) {
+                                                ;//loc_100EABD4
+                                            } else {
+                                                unsigned i = current_byte;
+                                                prior_decompressed_ptr = decompressed_ptr;
+                                                current_byte >> 2;
+                                                current_byte &= 7;
+                                                prior_decompressed_ptr -= current_byte;
+                                                current_word = *compressed_ptr;
+                                                compressed_ptr++;
+                                                current_word << 3;
+                                                prior_decompressed_ptr -= current_word;
+                                                prior_decompressed_ptr--;
+                                                i >> 5;
+                                                i--;
+                                                ;//loc_100EABBC
+                                                current_byte = *prior_decompressed_ptr;
+                                                *decompressed_ptr = current_byte;
+                                                prior_decompressed_ptr++;
+                                                decompressed_ptr++;
+                                                current_byte = *prior_decompressed_ptr;
+                                                *decompressed_ptr = current_byte;
+                                                prior_decompressed_ptr++;
+                                                decompressed_ptr++;
+
+                                                for (; i > 0; i--) {
+                                                    current_byte = *prior_decompressed_ptr;
+                                                    *decompressed_ptr = current_byte;
+                                                    prior_decompressed_ptr++;
+                                                    decompressed_ptr++;
+                                                }
+                                                ;//loc_100EAB82
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }

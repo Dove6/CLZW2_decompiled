@@ -221,7 +221,7 @@
 .text:100EABBB                 dec     ecx					; counter-- (w tym miejscu jest już gotowy counter do pętli niżej)						}
 .text:100EABBC																																	;	}
 .text:100EABBC loc_100EABBC:                           ; CODE XREF: sub_100EAAA0+1BC↓j <- punkt wejściowy											}
-.text:100EABBC                                         ; sub_100EAAA0+1C9↓j - przepisuje dwa wcześniejsze znaki (spod indeksu z edi) na wyjście		}
+.text:100EABBC                                         ; sub_100EAAA0+1C9↓j - przepisuje dwa wcześniejsze słowa (spod indeksu z edi) na wyjście		}
 .text:100EABBC                 mov     dl, [edi]			; dl <- wcześniejszy dekod znak	!8-bit!													}
 .text:100EABBE                 mov     [eax], dl			; dekod <- ^ !8-bit!																	}
 .text:100EABC0                 mov     dl, [edi+1]			; dl <- następne wcześniejszy dekod znak !8-bit!										}
