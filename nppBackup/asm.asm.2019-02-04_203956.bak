@@ -74,25 +74,25 @@
 .text:100EAABB                 mov     eax, [esp+10h+arg_8] ; eax <- pierwsze miejsce na dekod
 .text:100EAABF                 cmp     cl, 11h				; porównanie pobranego znaku z 17
 .text:100EAAC2                 jbe     short loc_100EAAE2	; jeśli cl <= 17 (unsigned comparison - cl >= 0)
-.text:100EAAC4                 and     ecx, 0FFh			; przycięcie słowa do 8 bitów (wcześniej w ch była reszta adresu pierwszego znaku kodu)
+.text:100EAAC4                 and     ecx, 0FFh			; przycięcie słowa do 16 bitów (wcześniej w ch była reszta adresu pierwszego znaku kodu)
 .text:100EAACA                 sub     ecx, 11h				; ...i odjęcie od niego 17
 .text:100EAACD                 inc     esi					; słownik indeks++
 .text:100EAACE                 cmp     ecx, 4				; porównanie słowa i 4
-.text:100EAAD1                 jb      loc_100EAB8E			; jeśli ecx < 4 (unsigned) (bez ^^^substrakcji: czy wartość słowa < 21)
+.text:100EAAD1                 jb      loc_100EAB8E			; jeśli ecx < 4 (unsigned) (bez substrakcji, czy wartość słowa < 21
 .text:100EAAD7
-.text:100EAAD7 loc_100EAAD7:                           ; CODE XREF: sub_100EAAA0+3E↓j - przepisywanie kodu	}
-.text:100EAAD7                 mov     dl, [esi]			; dl <- słownik znak !8-bit!					}
-.text:100EAAD9                 mov     [eax], dl			; dekod <- słownik znak							}
-.text:100EAADB                 inc     eax					; pole dekod indeks++							}
-.text:100EAADC                 inc     esi					; słownik indeks++								}
-.text:100EAADD                 dec     ecx					; counter--										}
-.text:100EAADE                 jnz     short loc_100EAAD7	; jeśli counter > 0, skocz wcześniej			} krótka pętla
-.text:100EAAE0                 jmp     short loc_100EAB4C	; jeśli nie, skocz dalej
+.text:100EAAD7 loc_100EAAD7:                           ; CODE XREF: sub_100EAAA0+3E↓j - wyjście ze słownika
+.text:100EAAD7                 mov     dl, [esi]			; dl <- słownik znak !8-bit!
+.text:100EAAD9                 mov     [eax], dl			; dekod <- słownik znak
+.text:100EAADB                 inc     eax					; pole dekod indeks++
+.text:100EAADC                 inc     esi					; słownik indeks++
+.text:100EAADD                 dec     ecx					; counter--
+.text:100EAADE                 jnz     short loc_100EAAD7	; jeśli counter > 0
+.text:100EAAE0                 jmp     short loc_100EAB4C	; jeśli nie
 .text:100EAAE2 ; ---------------------------------------------------------------------------
 .text:100EAAE2
 .text:100EAAE2 loc_100EAAE2:                           ; CODE XREF: sub_100EAAA0+22↑j <- punkt wejściowy
 .text:100EAAE2                                         ; sub_100EAAA0+E8↓j
-.text:100EAAE2                 xor     ecx, ecx				; zerowanie ecx
+.text:100EAAE2                 xor     ecx, ecx				; zerowanie eax
 .text:100EAAE4                 mov     cl, [esi]			; cl <- słownik znak !8-bit!
 .text:100EAAE6                 inc     esi					; słownik indeks++
 .text:100EAAE7                 cmp     ecx, 10h				; porównanie znaku i 16
@@ -113,12 +113,12 @@
 .text:100EAB07                 xor     edx, edx				; zeruje edx
 .text:100EAB09                 mov     dl, [esi]			; dl <- słownik znak !8-bit!
 .text:100EAB0B                 inc     esi					; słownik indeks++
-.text:100EAB0C                 lea     ecx, [ecx+edx+0Fh]	; ecx <- ecx + znak + 15
+.text:100EAB0C                 lea     ecx, [ecx+edx+0Fh]	; ecx <- adres ecx + znak + 15
 .text:100EAB10
 .text:100EAB10 loc_100EAB10:                           ; CODE XREF: sub_100EAAA0+52↑j
 .text:100EAB10                 mov     edx, [esi]			; edx <- słownik znak !32-bit!
 .text:100EAB12                 add     esi, 4				; słownik indeks += 4
-.text:100EAB15                 mov     [eax], edx			; dekod <- ^^ !32-bit!
+.text:100EAB15                 mov     [eax], edx			; dekod <- ^^ !8-bit!
 .text:100EAB17                 add     eax, 4				; dekod indeks += 4
 .text:100EAB1A                 dec     ecx					; counter--
 .text:100EAB1B                 jz      short loc_100EAB4C	; jeśli counter == 0, skocz dalej -->> wyskok z tej gałęzi

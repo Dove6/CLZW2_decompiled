@@ -118,7 +118,7 @@
 .text:100EAB10 loc_100EAB10:                           ; CODE XREF: sub_100EAAA0+52↑j
 .text:100EAB10                 mov     edx, [esi]			; edx <- słownik znak !32-bit!
 .text:100EAB12                 add     esi, 4				; słownik indeks += 4
-.text:100EAB15                 mov     [eax], edx			; dekod <- ^^ !32-bit!
+.text:100EAB15                 mov     [eax], edx			; dekod <- ^^ !8-bit!
 .text:100EAB17                 add     eax, 4				; dekod indeks += 4
 .text:100EAB1A                 dec     ecx					; counter--
 .text:100EAB1B                 jz      short loc_100EAB4C	; jeśli counter == 0, skocz dalej -->> wyskok z tej gałęzi

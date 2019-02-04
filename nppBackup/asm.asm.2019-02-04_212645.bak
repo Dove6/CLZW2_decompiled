@@ -92,7 +92,7 @@
 .text:100EAAE2
 .text:100EAAE2 loc_100EAAE2:                           ; CODE XREF: sub_100EAAA0+22↑j <- punkt wejściowy
 .text:100EAAE2                                         ; sub_100EAAA0+E8↓j
-.text:100EAAE2                 xor     ecx, ecx				; zerowanie ecx
+.text:100EAAE2                 xor     ecx, ecx				; zerowanie eax
 .text:100EAAE4                 mov     cl, [esi]			; cl <- słownik znak !8-bit!
 .text:100EAAE6                 inc     esi					; słownik indeks++
 .text:100EAAE7                 cmp     ecx, 10h				; porównanie znaku i 16
@@ -113,12 +113,12 @@
 .text:100EAB07                 xor     edx, edx				; zeruje edx
 .text:100EAB09                 mov     dl, [esi]			; dl <- słownik znak !8-bit!
 .text:100EAB0B                 inc     esi					; słownik indeks++
-.text:100EAB0C                 lea     ecx, [ecx+edx+0Fh]	; ecx <- ecx + znak + 15
+.text:100EAB0C                 lea     ecx, [ecx+edx+0Fh]	; ecx <- adres ecx + znak + 15
 .text:100EAB10
 .text:100EAB10 loc_100EAB10:                           ; CODE XREF: sub_100EAAA0+52↑j
 .text:100EAB10                 mov     edx, [esi]			; edx <- słownik znak !32-bit!
 .text:100EAB12                 add     esi, 4				; słownik indeks += 4
-.text:100EAB15                 mov     [eax], edx			; dekod <- ^^ !32-bit!
+.text:100EAB15                 mov     [eax], edx			; dekod <- ^^ !8-bit!
 .text:100EAB17                 add     eax, 4				; dekod indeks += 4
 .text:100EAB1A                 dec     ecx					; counter--
 .text:100EAB1B                 jz      short loc_100EAB4C	; jeśli counter == 0, skocz dalej -->> wyskok z tej gałęzi
