@@ -1,0 +1,14 @@
+143: prior_decompressed_ptr--;
+176: prior_decompressed_ptr--;
+241: prior_decompressed_ptr--;
+
+151: *decompressed_ptr = *prior_decompressed_ptr;
+209: *decompressed_ptr = *prior_decompressed_ptr;
+
+82: current_dword += 255;
+166: current_dword += 255;
+193: current_dword += 255;
+
+93: *decompressed_ptr = *compressed_ptr;
+125: *decompressed_ptr = *compressed_ptr;
+266: *decompressed_ptr = *compressed_ptr;
