@@ -287,11 +287,11 @@
 .text:100EAC29                 jnz     short loc_100EAC39	; jeśli znak != 0 !8-bit!
 .text:100EAC2B
 .text:100EAC2B loc_100EAC2B:                           ; CODE XREF: sub_100EAAA0+197↓j
-.text:100EAC2B                 mov     dl, [esi+1]			; jeśli znak == 0, dl <- następny znak	}
-.text:100EAC2E                 add     ecx, 0FFh			; znak += 255							}
-.text:100EAC34                 inc     esi					; słownik indeks++						}
-.text:100EAC35                 test    dl, dl													;	}
-.text:100EAC37                 jz      short loc_100EAC2B	; jeśli dl == 0							} krótka pętla
+.text:100EAC2B                 mov     dl, [esi+1]			; jeśli znak == 0, dl <- następny znak
+.text:100EAC2E                 add     ecx, 0FFh			; znak += 255
+.text:100EAC34                 inc     esi					; słownik indeks++
+.text:100EAC35                 test    dl, dl
+.text:100EAC37                 jz      short loc_100EAC2B	; jeśli dl == 0
 .text:100EAC39
 .text:100EAC39 loc_100EAC39:                           ; CODE XREF: sub_100EAAA0+189↑j
 .text:100EAC39                 xor     edx, edx				; jeśli dl != 0, zerowanie edx
@@ -315,7 +315,7 @@
 .text:100EAC62                 mov     edx, eax				; jeśli nie, edx <- dekod indeks
 .text:100EAC64                 sub     edx, edi				; wcześniejszy dekod indeks -= ...wcześniejszy dekod indeks (różnica indeksów?)
 .text:100EAC66                 cmp     edx, 4				; porównanie różnicy i 4
-.text:100EAC69                 jl      loc_100EABBC			; jeśli różnica < 4 (signed) -->> wyskok z tej gałęzi
+.text:100EAC69                 jl      loc_100EABBC			; jeśli różnica < 4 (signed)
 .text:100EAC6F                 mov     edx, [edi]			; edx <- ...wcześniejszy dekod znak !32-bit!
 .text:100EAC71                 add     edi, 4				; ...wcześniejszy dekod indeks += 4
 .text:100EAC74                 mov     [eax], edx			; dekod <- ^^ !32-bit!

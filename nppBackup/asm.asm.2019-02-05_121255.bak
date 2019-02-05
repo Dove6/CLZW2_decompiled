@@ -315,7 +315,7 @@
 .text:100EAC62                 mov     edx, eax				; jeśli nie, edx <- dekod indeks
 .text:100EAC64                 sub     edx, edi				; wcześniejszy dekod indeks -= ...wcześniejszy dekod indeks (różnica indeksów?)
 .text:100EAC66                 cmp     edx, 4				; porównanie różnicy i 4
-.text:100EAC69                 jl      loc_100EABBC			; jeśli różnica < 4 (signed) -->> wyskok z tej gałęzi
+.text:100EAC69                 jl      loc_100EABBC			; jeśli różnica < 4 (signed)
 .text:100EAC6F                 mov     edx, [edi]			; edx <- ...wcześniejszy dekod znak !32-bit!
 .text:100EAC71                 add     edi, 4				; ...wcześniejszy dekod indeks += 4
 .text:100EAC74                 mov     [eax], edx			; dekod <- ^^ !32-bit!
