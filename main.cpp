@@ -65,151 +65,137 @@ public:
             unsigned short current_word;
             unsigned long current_dword;
 
-            current_byte = *compressed_ptr;
+            //current_byte = *compressed_ptr; //powtórzone później
             if (current_byte <= 17) { //0x11
-                ;//loc_100EAAE2
+
+                current_byte = *compressed_ptr;//↓loc_100EAAE2
                 compressed_ptr++;
-                if (current_byte >= 16) {
-                    ;//loc_100EAB9C
-                } else {
-                    if (current_byte != 0) {
-                        ;//loc_100EAB10
-                    } else {
-                        if (*compressed_ptr != 0) {
-                            ;//loc_100EAB07
-                        } else {
+
+                if (current_byte < 16) {
+                    if (current_byte == 0) {
+                        if (*compressed_ptr == 0) {
                             current_dword = current_byte;
-                            do {
+
+                            do {//↓loc_100EAAF9
                                 current_byte = compressed_ptr[1];
                                 current_dword += 255; //0xFF
                                 compressed_ptr++;
                             } while (current_byte == 0);
+                        }
+                        compressed_ptr++;//↓loc_100EAB07
+                        current_dword += current_byte + 15;
+                    }
+                    unsigned i = current_dword;//↓loc_100EAB10
+                    //current_dword = *reinterpret_cast<unsigned *>(compressed_ptr);
+                    //compressed_ptr += 4;
+                    //*reinterpret_cast<unsigned *>(decompressed_ptr) = current_dword;
+                    //decompressed_ptr += 4;
+                    //i--; <- to jest w sumie niepotrzebne
+                    i += 3;
+
+                    //for (; i >= 4; i -= 4) {//↓loc_100EAB22
+                    //    current_dword = *reinterpret_cast<unsigned *>(compressed_ptr);
+                    //    *reinterpret_cast<unsigned *>(decompressed_ptr) = current_dword;
+                    //    compressed_ptr += 4;
+                    //    decompressed_ptr += 4;
+                    //} <- to jest w sumie niepotrzebne
+                    for (; i > 0; i--) {//↓loc_100EAB38, jak loc_100EAB43
+                        *decompressed_ptr = *compressed_ptr;
+                        compressed_ptr+;
+                        decompressed_ptr++;
+                    }
+                    //w tym momencie i = 0
+                    current_byte = *compressed_ptr;//↓loc_100EAB4C
+                    compressed_ptr++;
+
+                    if (current_byte < 16) {
+                        current_byte >> 2;
+                        char *prior_decompressed_ptr = decompressed_ptr;
+                        prior_decompressed_ptr -= current_byte;
+                        current_word = *compressed_ptr;
+                        current_word << 2;
+                        prior_decompressed_ptr -= current_word;
+                        prior_decompressed_ptr -= 2049;
+                        compressed_ptr++;
+                        *decompressed_ptr = *prior_decompressed_ptr;
+                        decompressed_ptr++;
+                        prior_decompressed_ptr++;
+
+                        *decompressed_ptr = prior_decompressed_ptr[0];//↓loc_100EAB77
+                        decompressed_ptr++;
+                        *decompressed_ptr = prior_decompressed_ptr[1];
+                        decompressed_ptr++;
+
+                        current_byte = compressed_ptr[-2];//↓loc_100EAB82
+                        current_byte &= 3;
+
+                        //↓loc_100EAB8E
+                        if (current_byte > 0) {
+                            for (unsigned i = current_byte; i > 0; i--) {
+                                *decompressed_ptr = *compressed_ptr;
+                                decompressed_ptr++;
+                                compressed_ptr++;
+                            }
+                            current_byte = *compressed_ptr;
                             compressed_ptr++;
-                            current_dword += current_byte + 15;
-                            unsigned i = current_dword;
-                            current_dword = *reinterpret_cast<unsigned *>(compressed_ptr);
-                            compressed_ptr += 4;
-                            *reinterpret_cast<unsigned *>(decompressed_ptr) = current_dword;
-                            decompressed_ptr += 4;
-                            i--;
-                            if (i == 0) {
-                                ;//loc_100EAB4C
-                            } else if (i < 4) {
-                                ;//loc_100EAB43
+
+                            //↓loc_100EAB9C
+                            if (current_byte >= 64) {
+                                unsigned i = current_byte;
+                                prior_decompressed_ptr = decompressed_ptr;
+                                current_byte >> 2;
+                                current_byte &= 7;
+                                prior_decompressed_ptr -= current_byte;
+                                current_word = *compressed_ptr;
+                                compressed_ptr++;
+                                current_word << 3;
+                                prior_decompressed_ptr -= current_word;
+                                prior_decompressed_ptr--;
+                                i >> 5;
+                                //i--;
+
+                                //current_byte = *prior_decompressed_ptr;//↓loc_100EABBC
+                                //*decompressed_ptr = current_byte;
+                                //prior_decompressed_ptr++;
+                                //decompressed_ptr++;
+                                //current_byte = *prior_decompressed_ptr;
+                                //*decompressed_ptr = current_byte;
+                                //prior_decompressed_ptr++;
+                                //decompressed_ptr++; <- to jest w sumie niepotrzebne
+                                i++;
+
+                                //↓loc_100EABC9
                                 for (; i > 0; i--) {
-                                    current_byte = *compressed_ptr;
-                                    *decompressed_ptr = current_byte;
-                                    compressed_ptr++;
+                                    *decompressed_ptr = *prior_decompressed_ptr;
+                                    prior_decompressed_ptr++;
                                     decompressed_ptr++;
                                 }
+                                ;//loc_100EAB82
                             } else {
-                                for (; i >= 4; i -= 4) {
-                                    current_dword = *reinterpret_cast<unsigned *>(compressed_ptr);
-                                    *reinterpret_cast<unsigned *>(decompressed_ptr) = current_dword;
-                                    compressed_ptr += 4;
-                                    decompressed_ptr += 4;
-                                }
-                                if (i == 0) {
-                                    ;//loc_100EAB4C
-                                } else {
-                                    for (; i > 0; i--) {//loc_100EAB38, jak loc_100EAB43
-                                        current_byte = *compressed_ptr;
-                                        *decompressed_ptr = current_byte;
-                                        compressed_ptr+;
-                                        decompressed_ptr++;
-                                    }
-                                    ;//loc_100EAB4C
-                                    current_byte = *compressed_ptr;
-                                    compressed_ptr++;
-                                    if (current_byte >= 16) {
-                                        ;//loc_100EAB9C
-                                    } else {
-                                        current_byte >> 2;
-                                        char *prior_decompressed_ptr = decompressed_ptr;
-                                        prior_decompressed_ptr -= current_byte;
-                                        current_word = *compressed_ptr;
-                                        current_word << 2;
-                                        prior_decompressed_ptr -= current_word;
-                                        prior_decompressed_ptr -= 2049;
-                                        current_byte = *prior_decompressed_ptr;
-                                        compressed_ptr++;
-                                        *decompressed_ptr = current_byte;
-                                        decompressed_ptr++;
-                                        prior_decompressed_ptr++;
-
-                                        current_byte = prior_decompressed_ptr[0];
-                                        *decompressed_ptr = current_byte;
-                                        decompressed_ptr++;
-                                        current_byte = prior_decompressed_ptr[1];
-                                        *decompressed_ptr = current_byte;
-                                        decompressed_ptr++;
-                                        ;//loc_100EAB82
-                                        current_byte = compressed_ptr[-2];
-                                        current_byte &= 3;
-                                        if (current_byte == 0) {
-                                            ;//loc_100EAAE2
-                                        } else {
-                                            for (unsigned i = current_byte; i > 0; i--) {
-                                                current_byte = *compressed_ptr;
-                                                *decompressed_ptr = current_byte;
-                                                decompressed_ptr++;
-                                                compressed_ptr++;
-                                            }
-                                            current_byte = *compressed_ptr;
-                                            compressed_ptr++;
-                                            ;//loc_100EAB9C
-                                            if (current_byte < 64) {
-                                                ;//loc_100EABD4
-                                            } else {
-                                                unsigned i = current_byte;
-                                                prior_decompressed_ptr = decompressed_ptr;
-                                                current_byte >> 2;
-                                                current_byte &= 7;
-                                                prior_decompressed_ptr -= current_byte;
-                                                current_word = *compressed_ptr;
-                                                compressed_ptr++;
-                                                current_word << 3;
-                                                prior_decompressed_ptr -= current_word;
-                                                prior_decompressed_ptr--;
-                                                i >> 5;
-                                                i--;
-                                                ;//loc_100EABBC
-                                                current_byte = *prior_decompressed_ptr;
-                                                *decompressed_ptr = current_byte;
-                                                prior_decompressed_ptr++;
-                                                decompressed_ptr++;
-                                                current_byte = *prior_decompressed_ptr;
-                                                *decompressed_ptr = current_byte;
-                                                prior_decompressed_ptr++;
-                                                decompressed_ptr++;
-
-                                                for (; i > 0; i--) {
-                                                    current_byte = *prior_decompressed_ptr;
-                                                    *decompressed_ptr = current_byte;
-                                                    prior_decompressed_ptr++;
-                                                    decompressed_ptr++;
-                                                }
-                                                ;//loc_100EAB82
-                                            }
-                                        }
-                                    }
-                                }
+                                ;//loc_100EABD4 (tu mam zacząć)
                             }
+                        } else {
+                            ;//loc_100EAAE2
                         }
+                    } else {
+                        ;//loc_100EAB9C
                     }
+                } else {//current_byte == 16 || current_byte == 17
+                    ;//loc_100EAB9C
                 }
             } else {
+                current_byte = *compressed_ptr;
                 current_byte -= 17;
                 compressed_ptr++;
-                if (current_byte < 4) {
-                    ;//loc_100EAB8E
-                } else {
+                if (current_byte >= 4) {
                     for (int i = current_byte; i > 0; i--) {
                         *decompressed_ptr = *compressed_ptr;
                         compressed_ptr++;
                         decompressed_ptr++;
                     }
-                    //loc_100EAB4C
+                    ;//loc_100EAB4C
+                } else {
+                    ;//loc_100EAB8E
                 }
             }
 
