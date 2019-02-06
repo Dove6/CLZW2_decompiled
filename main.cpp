@@ -60,12 +60,15 @@ public:
             char *compressed_ptr = input_ptr + 8;                                    //dane skompresowane
 
             reinterpret_cast<unsigned *>(input_ptr)[0] = 0; //zerowanie rozmiaru po dekompresji
-            char *last_compressed_ptr = input_ptr + input_size - 1; //ebp
+            char *last_compressed_ptr = input_ptr + input_size/* - 1*/; //ebp
+            char *first_compressed_ptr = compressed_ptr;
             char *first_decompressed_ptr = decompressed_ptr; //ebx
 
             unsigned char current_byte;
             unsigned short current_word;
             unsigned long current_dword;
+
+            unsigned i = 0;
 
             do {
                 current_byte = *compressed_ptr; //powtórzone później
@@ -88,7 +91,7 @@ public:
                             compressed_ptr++;//↓loc_100EAB07
                             current_dword += current_byte + 15;
                         }
-                        unsigned i = current_dword;//↓loc_100EAB10
+                        i = current_dword;//↓loc_100EAB10
                         i += 3;
 
                         for (; i > 0; i--) {//↓loc_100EAB38 a.k.a. loc_100EAB43
@@ -128,14 +131,14 @@ public:
                     current_byte -= 17;
                     compressed_ptr++;
                     if (current_byte >= 4) {//↓loc_100EAAD7
-                        for (int i = current_byte; i > 0; i--) {
+                        for (i = current_byte; i > 0; i--) {
                             *decompressed_ptr = *compressed_ptr;
                             compressed_ptr++;
                             decompressed_ptr++;
                         }
 
-                        current_byte = *compressed_ptr;//↓loc_100EAB4C
-                        compressed_ptr++;
+                        //current_byte = *compressed_ptr;//↓loc_100EAB4C
+                        //compressed_ptr++;
 
                         if (current_byte < 16) {
                             current_byte >>= 2;
@@ -163,7 +166,7 @@ public:
             } while (current_byte == 0);
 
             //↓loc_100EAB8E
-            for (unsigned i = current_byte; i > 0; i--) {
+            for (; i > 0; i--) {
                 *decompressed_ptr = *compressed_ptr;
                 decompressed_ptr++;
                 compressed_ptr++;
@@ -172,7 +175,7 @@ public:
             compressed_ptr++;
 
             ;//↓loc_100EAB9C
-            while (true) {
+            while (compressed_ptr <= last_compressed_ptr) {
                 if (current_byte >= 64) {
                     unsigned i = current_byte;
                     char *prior_decompressed_ptr = decompressed_ptr;
@@ -427,7 +430,7 @@ int main()
     if (decompressed != nullptr) {
         int dec_size = reinterpret_cast<int *>(text)[0];
         cout << "Wyjscie: (dl. " << dec_size << ")\n";
-        cout << string(decompressed + 8, dec_size) << '\n';
+        cout << string(decompressed, dec_size) << '\n';
     }
     return 0;
 }
