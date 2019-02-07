@@ -1,4 +1,6 @@
 #include <iostream>
+#include <fstream>
+#include <limits>
 
 using namespace std;
 
@@ -400,28 +402,44 @@ public:
 	}
 };
 
-int main()
+int main(int argc, char **argv)
 {
-    int text_length = 28;
-    char text[text_length];
-    cout << "Dane (" << (int *)text << ", dl. " << text_length << ")\n";
-    {//text initialization
-        text[0] = '\x10';
-        text[1] = '\0';
-        text[2] = '\0';
-        text[3] = '\0';
-        text[4] = '\x14';
-        text[5] = '\0';
-        text[6] = '\0';
-        text[7] = '\0';
-        text[8] = '!';
-        text[9] = 'a';
-        for (int i = 10; i < 25; i++) {
-            text[i] = text[i - 1] + 1;
+    int text_length;
+    char *text;
+    if (argc > 1) {
+        if (argc > 2) {
+            cout << "Wersja demo przyjmuje tylko jeden parametr xD";
         }
-        text[25] = '\x11';
-        text[26] = '\0';
-        text[27] = '\0';
+        ifstream compressed_file(argv[1], ios::in | ios::binary);
+        compressed_file.ignore(numeric_limits<streamsize>::max());
+        text_length = compressed_file.gcount();
+        compressed_file.clear();
+        compressed_file.seekg(0, ios_base::beg);
+        text = new char[text_length];
+        compressed_file.read(text, text_length);
+        cout << "Dane (" << (int *)text << ", dl. " << text_length << ") z pliku " << argv[1] << '\n';
+    } else {
+        text_length = 28;
+        text = new char[text_length];
+        cout << "Dane (" << (int *)text << ", dl. " << text_length << ")\n";
+        {//text initialization
+            text[0] = '\x10';
+            text[1] = '\0';
+            text[2] = '\0';
+            text[3] = '\0';
+            text[4] = '\x14';
+            text[5] = '\0';
+            text[6] = '\0';
+            text[7] = '\0';
+            text[8] = '!';
+            text[9] = 'a';
+            for (int i = 10; i < 25; i++) {
+                text[i] = text[i - 1] + 1;
+            }
+            text[25] = '\x11';
+            text[26] = '\0';
+            text[27] = '\0';
+        }
     }
     cout << string(text, text_length) << "\n\n";
     CLZWCompression2 a(text, text_length);

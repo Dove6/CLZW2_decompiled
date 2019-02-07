@@ -1,4 +1,6 @@
 # depslib dependency file v1.0
-1549414726 source:e:\programowanie\clzw2\main.cpp
+1549580390 source:e:\programowanie\clzw2\main.cpp
 	<iostream>
+	<fstream>
+	<limits>
 
