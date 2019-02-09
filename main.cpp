@@ -66,14 +66,14 @@ public:
             char *first_compressed_ptr = compressed_ptr;
             char *first_decompressed_ptr = decompressed_ptr; //ebx
 
-            unsigned char current_byte;
-            unsigned short current_word;
-            unsigned long current_dword;
+            unsigned char current_byte = *compressed_ptr;
+            unsigned short current_word = 0;
+            unsigned long current_dword = 0;
 
             unsigned i = 0;
 
             while (compressed_ptr <= last_compressed_ptr) {
-                if (((compressed_ptr - first_compressed_ptr == 1) && current_byte <= 17) || current_byte == 0) {
+                if (((compressed_ptr - first_compressed_ptr == 0) && current_byte <= 17) || current_byte == 0) {
                     //↓loc_100EAAE2
                     current_byte = *compressed_ptr;
                     compressed_ptr++;
@@ -103,7 +103,7 @@ public:
                         current_byte = *compressed_ptr;//↓loc_100EAB4C
                         compressed_ptr++;
                     }
-                } else if (compressed_ptr - first_compressed_ptr == 1) {
+                } else if (compressed_ptr - first_compressed_ptr == 0) {
                     current_byte = *compressed_ptr;
                     compressed_ptr++;
                     current_byte -= 17;
