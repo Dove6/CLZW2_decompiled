@@ -344,7 +344,7 @@
 .text:100EACA4 ; ---------------------------------------------------------------------------
 .text:100EACA4
 .text:100EACA4 loc_100EACA4:                           ; CODE XREF: sub_100EAAA0+16F↑j
-.text:100EACA4                 shr     ecx, 2				; counter >> 2 albo /= 2
+.text:100EACA4                 shr     ecx, 2				; counter -= 2
 .text:100EACA7                 mov     edx, eax				; edx <- dekod indeks
 .text:100EACA9                 sub     edx, ecx				; wcześniejszy dekod indeks -= counter
 .text:100EACAB                 xor     ecx, ecx				; zerowanie ecx
