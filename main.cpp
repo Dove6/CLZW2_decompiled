@@ -189,7 +189,7 @@ public:
                     i >>= 5;
 
                     //↓loc_100EABBC
-                    i++;
+                    i += 2;
 
                     //↓loc_100EABC9
                     for (; i > 0; i--) {
@@ -233,11 +233,11 @@ public:
 
                     ;//↓loc_100EAC59
                     i = current_dword;
-                    if (current_dword >= 6) {
+                    /*if (current_dword >= 6) {
                         int ptr_difference = decompressed_ptr - prior_decompressed_ptr;
                         if (ptr_difference >= 4) {
                             i += 2;
-                            for (; i >= 4; i--) {//↓loc_100EAC7C
+                            for (; i > 0; i--) {//↓loc_100EAC7C
                                 *decompressed_ptr = *prior_decompressed_ptr;
                                 decompressed_ptr++;
                                 prior_decompressed_ptr++;
@@ -254,7 +254,7 @@ public:
                             compressed_ptr++;
                             ;//loc_100EAB9C
                         }
-                    }
+                    }*/
                     //↓loc_100EABBC
                     i += 2;
 
@@ -315,7 +315,7 @@ public:
                             }
                         } else {
                             //↓loc_100EABBC
-                            i++;
+                            i += 2;
 
                             //↓loc_100EABC9
                             for (; i > 0; i--) {
