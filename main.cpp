@@ -364,7 +364,7 @@ public:
 
             ;//↓loc_100EACBB (gałąź końcowa)
             unsigned ptr_difference = decompressed_ptr - first_decompressed_ptr;
-            input_ptr[0] = ptr_difference;
+            reinterpret_cast<unsigned *>(input_ptr)[0] = ptr_difference;
             if (compressed_ptr != last_compressed_ptr) { //błędy - return zwraca co innego
                 ;//↓loc_100EACCE
                 if (compressed_ptr < last_compressed_ptr) { //wyjście zawiera mniej niż zaplanowano
@@ -417,6 +417,7 @@ int main(int argc, char **argv)
         compressed_file.seekg(0, ios_base::beg);
         text = new char[text_length];
         compressed_file.read(text, text_length);
+        compressed_file.close();
         cout << "Dane (" << (int *)text << ", dl. " << text_length << ") z pliku " << argv[1] << '\n';
     } else {
         text_length = 28;
@@ -446,9 +447,21 @@ int main(int argc, char **argv)
     a.print_beautiful();
     char *decompressed = a.decompress();
     if (decompressed != nullptr) {
-        int dec_size = reinterpret_cast<int *>(text)[0];
-        cout << "Wyjscie: (dl. " << dec_size << ")\n";
-        cout << string(decompressed, dec_size) << '\n';
+        if (decompressed == (char *)-8) {
+            cout << "Blad! Wyjscie zbyt krotkie!\n";
+        } else if (decompressed == (char *)-4) {
+            cout << "Blad! Wyjscie zbyt dlugie!\n";
+        } else {
+            int dec_size = reinterpret_cast<int *>(text)[0];
+            cout << "Wyjscie: (dl. " << dec_size << ")\n";
+            cout << string(decompressed, dec_size) << '\n';
+            if (argc > 1) {
+                ofstream decompressed_file(string(argv[1]) + ".dek", ios::out | ios::binary);
+                decompressed_file.write(decompressed, dec_size);
+                decompressed_file.close();
+            }
+        }
+
     }
     return 0;
 }
