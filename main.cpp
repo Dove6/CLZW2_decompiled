@@ -137,8 +137,8 @@ public:
                                 decompressed_ptr++;
                             }
 
-                            //current_byte = *compressed_ptr;//↓loc_100EAB4C
-                            //compressed_ptr++;
+                            current_byte = *compressed_ptr;//↓loc_100EAB4C
+                            compressed_ptr++;
 
                             if (current_byte < 16) {
                                 current_byte >>= 2;
@@ -189,7 +189,7 @@ public:
                     i >>= 5;
 
                     //↓loc_100EABBC
-                    i += 2;
+                    i++;
 
                     //↓loc_100EABC9
                     for (; i > 0; i--) {
