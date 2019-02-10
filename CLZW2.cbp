@@ -11,7 +11,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="testy2\2test4.txt.kod" />
+				<Option parameters="img\trimmed_bkg.img.kod" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>

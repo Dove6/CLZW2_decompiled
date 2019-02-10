@@ -62,7 +62,8 @@ public:
             unsigned char *compressed_ptr = reinterpret_cast<unsigned char *>(input_ptr + 8);   //dane skompresowane
 
             reinterpret_cast<unsigned *>(input_ptr)[0] = 0; //zerowanie rozmiaru po dekompresji
-            unsigned char *last_compressed_ptr = reinterpret_cast<unsigned char *>(input_ptr + input_size)/* - 1*/; //ebp
+            unsigned char *last_compressed_ptr = reinterpret_cast<unsigned char *>(input_ptr + input_size); //ebp
+            unsigned char *last_decompressed_ptr = reinterpret_cast<unsigned char *>(decompressed_ptr + decompressed_size);
             unsigned char *first_compressed_ptr = compressed_ptr;
             unsigned char *first_decompressed_ptr = decompressed_ptr; //ebx
 
@@ -210,27 +211,11 @@ public:
 
                         ;//↓loc_100EAC59
                         i = current_dword;
-                        /*if (current_dword >= 6) {
-                            int ptr_difference = decompressed_ptr - prior_decompressed_ptr;
-                            if (ptr_difference >= 4) {
-                                i += 2;
-                                for (; i > 0; i--) {//↓loc_100EAC7C
-                                    *decompressed_ptr = *prior_decompressed_ptr;
-                                    decompressed_ptr++;
-                                    prior_decompressed_ptr++;
-                                }
-                                current_byte = compressed_ptr[-2];//↓loc_100EAB82
-                                current_byte &= 3;
-                                //↓loc_100EAB8E
-                                for (unsigned i = current_byte; i > 0; i--) {
-                                    *decompressed_ptr = *compressed_ptr;
-                                    decompressed_ptr++;
-                                    compressed_ptr++;
-                                }
-                                current_byte = *compressed_ptr;
-                                compressed_ptr++;
-                                ;//loc_100EAB9C
-                            }
+                        /* wycięte:
+                         * loc_100EAC7C
+                         * loc_100EAB82
+                         * loc_100EAB8E
+                         * loc_100EAB9C (jmp)
                         }*/
                         //↓loc_100EABBC
                         i += 2;
@@ -272,43 +257,36 @@ public:
                             compressed_ptr++;//↓loc_100EAC39
                             current_dword += current_byte + 7;
                         }
-                        current_word = *reinterpret_cast<unsigned short *>(compressed_ptr);//↓loc_100EAC42
+                        short current_signed_word = *reinterpret_cast<short *>(compressed_ptr);//↓loc_100EAC42
                         compressed_ptr += 2;
-                        current_word >>= 2;
-                        prior_decompressed_ptr -= current_word;
+                        current_signed_word >>= 2;
+                        prior_decompressed_ptr -= current_signed_word;
                         if (prior_decompressed_ptr == decompressed_ptr) {
                             break;
                         } else {
                             prior_decompressed_ptr -= 16384; //0x4000
                             ;//↓loc_100EAC59
-                            int i = current_dword;
-                            if (current_dword >= 6) {
-                                int ptr_difference = decompressed_ptr - prior_decompressed_ptr;
-                                if (ptr_difference >= 4) {
-                                    current_dword += 2;
-                                    for (; i >= 4; i--) {//↓loc_100EAC7C
-                                        *decompressed_ptr = *prior_decompressed_ptr;
-                                        decompressed_ptr++;
-                                        prior_decompressed_ptr++;
-                                    }
-                                }
-                            } else {
-                                //↓loc_100EABBC
-                                i += 2;
+                            i = current_dword;
+                            /* wycięte:
+                             * loc_100EAC7C
+                             * loc_100EAB82
+                             * loc_100EAB8E
+                             * loc_100EAB9C (jmp)
+                            }*/
+                            //↓loc_100EABBC
+                            i += 2;
 
-                                //↓loc_100EABC9
-                                for (; i > 0; i--) {
-                                    *decompressed_ptr = *prior_decompressed_ptr;
-                                    prior_decompressed_ptr++;
-                                    decompressed_ptr++;
-                                }
+                            //↓loc_100EABC9
+                            for (; i > 0; i--) {
+                                *decompressed_ptr = *prior_decompressed_ptr;
+                                prior_decompressed_ptr++;
+                                decompressed_ptr++;
                             }
-
                             current_byte = compressed_ptr[-2];//↓loc_100EAB82
                             current_byte &= 3;
                             if (current_byte > 0) {
                                 //↓loc_100EAB8E
-                                for (unsigned i = current_byte; i > 0; i--) {
+                                for (i = current_byte; i > 0; i--) {
                                     *decompressed_ptr = *compressed_ptr;
                                     decompressed_ptr++;
                                     compressed_ptr++;
@@ -426,7 +404,11 @@ int main(int argc, char **argv)
             text[27] = '\0';
         }
     }
-    cout << string(text, text_length) << "\n\n";
+    if (text_length <= 512) {
+        cout << string(text, text_length) << "\n\n";
+    } else {
+        cout << string(text, 510) << "(...)\n\n";
+    }
     CLZWCompression2 a(text, text_length);
     a.print_beautiful();
     char *decompressed = a.decompress();
@@ -438,7 +420,11 @@ int main(int argc, char **argv)
         } else {
             int dec_size = reinterpret_cast<int *>(text)[0];
             cout << "Wyjscie: (dl. " << dec_size << ")\n";
-            cout << string(decompressed, dec_size) << '\n';
+            if (dec_size <= 512) {
+                cout << string(decompressed, dec_size) << '\n';
+            } else {
+                cout << string(decompressed, 510) << "(...)\n";
+            }
             if (argc > 1) {
                 ofstream decompressed_file(string(argv[1]) + ".dek", ios::out | ios::binary);
                 decompressed_file.write(decompressed, dec_size);
