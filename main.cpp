@@ -56,15 +56,15 @@ public:
 	    if (input_size > 8 && input_ptr != nullptr) {
             //zdekompilowana funkcja
             //↓sub_100EAAA0
-            unsigned decompressed_size = reinterpret_cast<unsigned *>(input_ptr)[0]; //rozmiar po dekompresji
-            char *decompressed_ptr = new char[decompressed_size];                    //miejsce na dekompresję
-            unsigned compressed_size = reinterpret_cast<unsigned *>(input_ptr)[1];   //rozmiar skompresowany
-            char *compressed_ptr = input_ptr + 8;                                    //dane skompresowane
+            unsigned decompressed_size = reinterpret_cast<unsigned *>(input_ptr)[0];            //rozmiar po dekompresji
+            unsigned char *decompressed_ptr = new unsigned char[decompressed_size];             //miejsce na dekompresję
+            unsigned compressed_size = reinterpret_cast<unsigned *>(input_ptr)[1];              //rozmiar skompresowany
+            unsigned char *compressed_ptr = reinterpret_cast<unsigned char *>(input_ptr + 8);   //dane skompresowane
 
             reinterpret_cast<unsigned *>(input_ptr)[0] = 0; //zerowanie rozmiaru po dekompresji
-            char *last_compressed_ptr = input_ptr + input_size/* - 1*/; //ebp
-            char *first_compressed_ptr = compressed_ptr;
-            char *first_decompressed_ptr = decompressed_ptr; //ebx
+            unsigned char *last_compressed_ptr = reinterpret_cast<unsigned char *>(input_ptr + input_size)/* - 1*/; //ebp
+            unsigned char *first_compressed_ptr = compressed_ptr;
+            unsigned char *first_decompressed_ptr = decompressed_ptr; //ebx
 
             unsigned char current_byte = *compressed_ptr;
             unsigned short current_word = 0;
@@ -118,7 +118,7 @@ public:
 
                 if (current_byte < 16) {
                     current_byte >>= 2;
-                    char *prior_decompressed_ptr = decompressed_ptr;
+                    unsigned char *prior_decompressed_ptr = decompressed_ptr;
                     prior_decompressed_ptr -= current_byte;
                     current_word = *compressed_ptr;
                     current_word <<= 2;
@@ -152,7 +152,7 @@ public:
                     ;//↓loc_100EAB9C
                     if (current_byte >= 64) {
                         i = current_byte;
-                        char *prior_decompressed_ptr = decompressed_ptr;
+                        unsigned char *prior_decompressed_ptr = decompressed_ptr;
                         current_byte >>= 2;
                         current_byte &= 7;
                         prior_decompressed_ptr -= current_byte;
@@ -201,7 +201,7 @@ public:
                             compressed_ptr++;//↓loc_100EABF1
                             current_dword += current_byte + 31; //0x1F
                         }
-                        char *prior_decompressed_ptr = decompressed_ptr;//↓loc_100EABFA
+                        unsigned char *prior_decompressed_ptr = decompressed_ptr;//↓loc_100EABFA
                         current_word = *reinterpret_cast<unsigned short *>(compressed_ptr);
                         compressed_ptr += 2;
                         current_word >>= 2;
@@ -254,7 +254,7 @@ public:
                             compressed_ptr++;
                         }
                     } else if (current_byte >= 16) {//↓loc_100EAC0C (gałąź przed końcem)
-                        char *prior_decompressed_ptr = decompressed_ptr;
+                        unsigned char *prior_decompressed_ptr = decompressed_ptr;
                         current_dword = current_byte;
                         current_dword &= 8;
                         current_dword <<= 1;
@@ -319,7 +319,7 @@ public:
                         }
                     } else {
                         current_byte >>= 2;//↓loc_100EACA4
-                        char *prior_decompressed_ptr = decompressed_ptr;
+                        unsigned char *prior_decompressed_ptr = decompressed_ptr;
                         prior_decompressed_ptr -= current_byte;
                         current_word = *prior_decompressed_ptr;
                         current_word <<= 2;
@@ -358,7 +358,7 @@ public:
                 }
                 //oficjalny koniec pętli
             } else {
-                return first_decompressed_ptr;
+                return reinterpret_cast<char *>(first_decompressed_ptr);
             }
 
 	    } else {
