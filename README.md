@@ -1,4 +1,4 @@
-# AMkd
+# CLZW2_decompiled
 Zdekompilowana mozolnym trudem funkcja dekompresji CLZW2 plików .img.
 Niestety, niekompletnie. Zapewne jakiś drobny błąd przeważył o upadku całego przedsięwzięcia. Na większych testach po prostu się wywala.
 Efekty prac pozwalają natomiast na lepsze zrozumienie samego mechanizmu kompresji i działania funkcji, gdyż __większość__ kodu zapewne jest poprawna.
